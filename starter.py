@@ -1,19 +1,20 @@
+# 필요한 library
 import streamlit as st
 
 from langchain.text_splitter import CharacterTextSplitter
-from langchain.vectorstores import FAISS
+from langchain.vectorstores import FAISS 
 from langchain.embeddings import OpenAIEmbeddings
-from langchain.chat_models import ChatOpenAI
-from langchain.schema import HumanMessage, SystemMessage
-from langchain.callbacks.base import BaseCallbackHandler
-from langchain.schema import ChatMessage
+from langchain.chat_models import ChatOpenAI 
+from langchain.schema import HumanMessage, SystemMessage #prompt 넣어줄 때 쓰는 것
+from langchain.callbacks.base import BaseCallbackHandler #토큰 단위로 받자마자 바로 출력하기.
+from langchain.schema import ChatMessage #왔다갔다 하는 메세지를 관리하는 기능.
 
-from dotenv import load_dotenv
+from dotenv import load_dotenv #내부적으로 토큰을 인식해서 하는 과정.
 
 load_dotenv()
 
 # handle streaming conversation
-class StreamHandler(BaseCallbackHandler):
+class StreamHandler(BaseCallbackHandler): #왔다갔다 하는 메세지를 관리하는 코드.
     def __init__(self, container, initial_text=""):
         self.container = container
         self.text = initial_text
@@ -23,8 +24,8 @@ class StreamHandler(BaseCallbackHandler):
         self.container.markdown(self.text)
 
 
-# function to extract text from an HWP file
-import olefile
+# function to extract text from an HWP file. 한글문서는 그대로 다루는 것이 필요함. langchain에서는 hwp parser를 다룰 수 없다.
+import olefile 
 import zlib
 import struct
 
@@ -88,7 +89,7 @@ def get_pdf_text(filename):
     return raw_text
 
 # document preprocess
-def process_uploaded_file(uploaded_file):
+def process_uploaded_file(uploaded_file): #split해서 저장하는 것은 한번하고 안하게 하기 위해!
     # Load document if file is uploaded
     if uploaded_file is not None:
         # loader
@@ -101,7 +102,7 @@ def process_uploaded_file(uploaded_file):
     return None
 
 # generate response using RAG technic
-def generate_response(query_text, vectorstore, callback):
+def generate_response(query_text, vectorstore, callback): #vectorstore를 해서 가져와서 cosine 유사도를 봐서 topK를 가져오게.
 
     # retriever 
         
@@ -116,7 +117,7 @@ def generate_summarize(raw_text, callback):
 
     return response.content
 
-
+#어플 꾸미는 코드
 # page title
 st.set_page_config(page_title='🦜🔗 문서 기반 요약 및 QA 챗봇')
 st.title('🦜🔗 문서 기반 요약 및 QA 챗봇')
@@ -139,7 +140,7 @@ if uploaded_file:
         st.session_state['vectorstore'] = vectorstore
         st.session_state['raw_text'] = raw_text
         
-# chatbot greatings
+# chatbot greetings
 if "messages" not in st.session_state:
     st.session_state["messages"] = [
         ChatMessage(
@@ -147,7 +148,7 @@ if "messages" not in st.session_state:
         )
     ]
 
-# conversation history print 
+# conversation history print 누적된 대화를 저장했다가 한번에 뿌려주는 기능임.
 for msg in st.session_state.messages:
     st.chat_message(msg.role).write(msg.content)
     
