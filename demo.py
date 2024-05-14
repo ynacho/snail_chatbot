@@ -179,6 +179,8 @@ st.markdown('''
 - 전세사기피해자 지원 및 주거안정에 관한 특별법 시행령
 - 전세사기피해자 지원 및 주거안정에 관한 특별법 시행규칙
 
+[해당 법령 다운로드](https://drive.google.com/file/d/1Li1yGJlgDjafKO5VjN_ofwNRB_0GZbcb/view?usp=sharing)
+
 좀 더 자세한 주거 상담을 원하신다면, 아래 링크에 접속하셔서 민달팽이유니온 주거상담을 신청해주세요!
 
 [민달팽이유니온 주거상담 신청](https://minsnailunion.net/consultform)
