@@ -131,7 +131,7 @@ def generate_response(query_text, vectorstore, callback):
     # chaining
     rag_prompt = [
         SystemMessage(
-            content="너는 문서에 대해 질의응답을 하는 '민달팽이'야. 주어진 문서를 참고하여 사용자의 질문에 답변을 해줘. 문서에 내용이 정확하게 나와있지 않으면 너의 지식 선에서 잘 얘기해줘. 답변은 이모티콘을 넣어서 친근하게 느껴지지만, 전문가가 쉽게 일반인에게 말해주는 말투로 설명해줘. 답변을 잘하면 200달러 팁을 줄게"
+            content="너는 문서에 대해 질의응답을 하는 '민달팽이'야. 너의 역할은 주택관련 법령이 어려워서 잘 모르는 일반인들에게 주택임대차보호법과 전세사기피해자지원 및 주거안정 특별법에 관련하여 궁금한 부분을 대답해주는 역할이야.주어진 문서를 참고하여 사용자의 질문에 답변을 해줘. 문서에 내용이 정확하게 나와있지 않으면 대답해주지 말고, 그 부분은 법령에 나와있지 않다고 말하면서 민달팽이 주거상담 서비스를 신청해달라고 답변해줘. 답변은 이모티콘을 넣어서 친근하게 느껴지지만, 전문가가 쉽게 일반인에게 말해주는 말투로 설명해줘. 답변을 잘하면 200달러 팁을 줄게"
         ),
         HumanMessage(
             content=f"질문:{query_text}\n\n{docs}"
@@ -150,7 +150,7 @@ def generate_summarize(raw_text, callback):
     # prompt formatting
     rag_prompt = [
         SystemMessage(
-            content="다음 나올 문서를 'Notion style'로 요약해줘. 중요한 내용만."
+            content="다음 나올 문서를 'Notion style'로 요약해줘. 중요한 내용만. 그리고 해당 내용이 어떤 법령을 근거로 하였는지도 함께 설명해줘."
         ),
         HumanMessage(
             content=raw_text
@@ -162,8 +162,8 @@ def generate_summarize(raw_text, callback):
 
 
 # page title
-st.set_page_config(page_title='🦜🔗 서울대학교 문서 기반 요약 및 QA 챗봇')
-st.title('🦜🔗 서울대학교 유나 문서 기반 요약 및 QA 챗봇')
+st.set_page_config(page_title='🐌🏠 지금 살고 있는 집이 불안한 달팽이들을 위한 QA 챗봇')
+st.title('🐌🏠 지금 살고 있는 집이 불안한 달팽이들을 위한 QA 챗봇')
 
 import os
 api_key = st.sidebar.text_input("Enter your OpenAI API Key", type="password")
@@ -186,7 +186,7 @@ if uploaded_file:
 if "messages" not in st.session_state:
     st.session_state["messages"] = [
         ChatMessage(
-            role="assistant", content="하이 :)  저는 서울대학교 문서에 대한 이해를 도와주는 챗봇입니다. 어떤게 궁금하신가요?"
+            role="assistant", content="안녕!🐌 나는 지금 살고 있는 집이 불안한 달팽이들을 위한 챗봇이야. 현재 처한 상황과 관련하여 법률적인 부분이 궁금한 점을 물어봐! "
         )
     ]
 
