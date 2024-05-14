@@ -162,8 +162,8 @@ def generate_summarize(raw_text, callback):
 
 
 # page title
-st.set_page_config(page_title='🐌🏠 지금 살고 있는 집이 불안한 달팽이들을 위한 QA 챗봇')
-st.title('🐌🏠 지금 살고 있는 집이 불안한 달팽이들을 위한 QA 챗봇')
+st.set_page_config(page_title='🐌🏠 살고 있는 집이 불안한 달팽이들을 위한 QA 챗봇')
+st.title('🐌🏠 살고 있는 집이 불안한 달팽이들을 위한 QA 챗봇')
 
 import os
 api_key = st.sidebar.text_input("Enter your OpenAI API Key", type="password")
@@ -195,7 +195,7 @@ for msg in st.session_state.messages:
     st.chat_message(msg.role).write(msg.content)
     
 # message interaction
-if prompt := st.chat_input("'요약'이라고 입력해보세요!"):
+if prompt := st.chat_input("집 계약과 관련하여 의미가 궁금한 용어를 입력해보세요! 또는 지금 처한 곤란한 상황에 대해 저에게 알려주세요"):
     st.session_state.messages.append(ChatMessage(role="user", content=prompt))
     st.chat_message("user").write(prompt)
 
