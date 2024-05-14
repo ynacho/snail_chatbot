@@ -93,11 +93,27 @@ def process_uploaded_file(uploaded_file): #split해서 저장하는 것은 한�
     # Load document if file is uploaded
     if uploaded_file is not None:
         # loader
-
+        # pdf파일을 처리
+        if uploaded_file.type == 'application/pdf':
+            raw_text = get_pdf_text(uploaded_file)
+        # hwp파일을 처리
+        elif uploaded_file.type == 'application/octet-stream':
+            raw_text = get_hwp_text(uploaded_file)
+            
         # splitter
+        text_splitter = CharacterTextSplitter(
+            separator = "\n\n",
+            chunk_size = 1000,
+            chunk_overlap  = 200,
+            length_function = len,
+            is_separator_regex = False,
+        )
+        all_splits = text_splitter.create_documents([raw_text])
+        
+        print("총 " + str(len(all_splits)) + "개의 passage")
         
         # storage
-                
+        vectorstore = FAISS.from_documents(documents=all_splits, embedding=OpenAIEmbeddings())        
         return vectorstore, raw_text
     return None
 
@@ -105,11 +121,25 @@ def process_uploaded_file(uploaded_file): #split해서 저장하는 것은 한�
 def generate_response(query_text, vectorstore, callback): #vectorstore를 해서 가져와서 cosine 유사도를 봐서 topK를 가져오게.
 
     # retriever 
+    docs_list = vectorstore.similarity_search(query_text, k=3)
+    docs = ""
+    for i, doc in enumerate(docs_list)
+        docs += f"'문서{i+1}':{doc.page_content}\n"
         
     # generator
-    
+    llm = ChatOpenAI(model_name="gpt-4o", temperature=0, streaming=True, callbacks=[callback])
+
     # chaining
+    rag_prompt = [
+        SystemMessage(
+            content="너는 문서에 대해 질의응답을 하는 '씨엔이'야. 주어진 문서를 참고하여 사용자의 질문에 답변을 해줘. 문서에 내용이 정확하게 나와있지 않으면 대답하지 마."
+        ),
+        HumanMessage(
+            content=f"질문:{query_text}\n\n{docs}"
+        ),
+    ]
     
+    response = llm(rag_prompt)
     return response.content
 
 
